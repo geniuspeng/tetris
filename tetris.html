@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TETRIS</title>
+	<link rel="stylesheet" type="text/css" href="tetris.css">
+	<script type="text/javascript" src="jquery.min.js"></script>
+	
+</head>
+<body>
+
+ <div class='main' id='main'> 
+    <div class='column gamebox grid' id='board'></div>
+    <div class='column gamebox ' id='nextboard'></div>
+    <div class='score'>
+        <div class='column' id='hi_score_label'>最高分数:</div>
+        <div class='column' id='hi_score_value'>0</div><br/>
+        <div class='column' id='score_label'>当前分数:</div>
+        <div class='column' id='score_value'>0</div><br/>
+        <div class='column' id='line_label'>消除行数:</div>
+        <div class='column' id='line_cleared'>0</div><br/>
+        <div class='column' id='level_label'>级别:</div>
+        <div class='column' id='level'>0</div><br/>
+        <div class='column' id='speed_label'>下落间隔（ms）:</div>
+        <div class='column' id='speed'>0</div><br/>
+    </div>   
+
+    <div class='rule'>方向键：←，→  <br/>加速下落：↓  <br/>瞬间下落：↑ <br/>旋转：space</div>   
+    <div class='control'>
+        <button id='start'>开始</button>
+        <button id='pause'>暂停/继续</button>
+ <!--        <button id='restart'>重新开始</button> -->
+    </div>
+
+<script type="text/javascript" src="tetris.js"></script>
+</body>
+</html>
