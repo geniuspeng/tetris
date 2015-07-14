@@ -1,3 +1,12 @@
+body {
+   background-image: url(./bg.jpg);
+   background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+
+    -o-background-size: cover;
+}
 div {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -12,13 +21,55 @@ div {
   user-select: none;
 }
 #main {
-  background-color: black;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
   width: 1040px;
   padding: 30px;
   border: 3px solid black;
   box-shadow: 3px 3px 2px black;
   border-radius: 10px;
 }
+
+#main .score {
+  position: absolute;
+  height: 150px;
+  width: 160px;
+  left: 380px;
+  top: 240px;
+  border: 5px solid #333333;
+  border-radius: 10px;
+  background-color: rgba(51, 51, 51, 0.5);
+  text-shadow: 1px 1px #888888;
+  box-shadow: 3px 3px 3px black;
+}
+
+#main .rule {
+  position: absolute;
+  height: 150px;
+  width: 160px;
+  left: 380px;
+  top: 400px;
+  border: 5px solid #333333;
+  border-radius: 10px;
+  background-color: rgba(51, 51, 51, 0.5);
+  text-shadow: 1px 1px #888888;
+  box-shadow: 3px 3px 3px black;
+}
+
+#main .control {
+  position: absolute;
+  height: 120px;
+  width: 160px;
+  left: 380px;
+  top: 560px;
+  border: 5px solid #333333;
+  border-radius: 10px;
+  background-color: rgba(51, 51, 51, 0.5);
+  text-shadow: 1px 1px #888888;
+  box-shadow: 3px 3px 3px black;
+}
+
+
 #main .column {
   display: inline-block;
   vertical-align: top;
@@ -32,7 +83,7 @@ div {
   border-radius: 5px;
 }
 
-#main .row {
+/*#main .row {
 
   height: 31px !important;
 }
@@ -40,7 +91,7 @@ div {
   display: inline-block;
   width: 30px !important;
   height: 30px !important;
-}
+}*/
 
 #main #board, #main #nextboard {
   position: relative;
@@ -49,7 +100,7 @@ div {
   box-shadow: 3px 3px 3px black;
 }
 
-#main .cell:not(.block) {
+#main .grid .cell:not(.block) {
   border: 1px solid rgba(0, 0, 0, 0.2);
   
 }

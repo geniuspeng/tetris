@@ -14,19 +14,15 @@ var Board = function(game, height, width){
 };
 //画板创建
 Board.prototype.build = function(){
-	var row,cell,x,y,i,j;
+	var row,cell,i,j;
 	var temprow;
 
 	this.cells = []; //存储画板上的每一小格x，y坐标的数组,这个坐标存储在每一个小块的location属性中
-	for (y = i = 0; i < this.height; i++) {
+	for (i = 0; i < this.height; i++) {
 		row = $('<div>').addClass('row');
 		temprow = [];
-		for (x = j = 0; j < this.width; j++) {
+		for (j = 0; j < this.width; j++) {
 			cell = $('<div>').addClass('cell');
-			cell.data('location', {
-                        x: x,
-                        y: y
-                    }); 
 			//console.log(x+','+y);
 			temprow.push(cell);
 			row.append(cell);
@@ -101,6 +97,7 @@ Board.prototype.checkFullLines = function() {
 		this.shiftDownStatic(craseLines[k]);
 	};
 	this.unClearStatic();
+	this.game.cal_score(craseLines.length);
 };
 
 //Chunk定义一个小块，即block的一个格子，并且带有坐标
@@ -248,6 +245,11 @@ Block.prototype.shiftDown = function(i) {
 		}
 	};
 };
+
+Block.prototype.drop = function() {
+	while(this.move('down'));
+};
+
 Block.prototype.move = function(direction) {
 	var  newlocation, xmod=0, ymod=0;
 
@@ -326,12 +328,17 @@ Input.prototype.codes = {
 
 var Game = function(){
 	this.tick = bind(this.tick, this);
-	//this.start = bind(this.start, this);
+	this.start = bind(this.start, this);
+	this.pause = bind(this.pause, this);
 	this.board = new Board(this,21,10);
 	this.next_board = new Board(this,5,5);
+	this.highScore = 0;//记录最高分数
 	//this.block = new Block(this.board,{x:2,y:2});
 	new Input(this);
-	this.start();
+
+	 $('#start').on('click', this.start);
+	 $('#pause').on('click', this.pause);
+	//this.start();
 };
 
 Game.prototype.start = function () {
@@ -341,17 +348,30 @@ Game.prototype.start = function () {
 	this.l_cleared = 0; //消除的总行数 
 	this.score = 0;  //总分数
 	this.board.clearStatic();//清除原有面板
+	$('#nextboard').addClass('grid'); //加上nextboard的网格效果
+	$('#nextboard .cell').text(''); //清除nextboard上的文字
+	this.cal_score(0); //还原分数和级别 速度等的显示数据
 	this.genernateBlock();
 	this.makeActive();
 	this.board.static_blocks = [];//定义已经下落触底后静止后的方块集合
 	this.run = true; //控制游戏的进行与结束
+	this.paused = false; //控制游戏的暂停与继续
 	this.tick();
+};
+
+Game.prototype.pause = function () {
+    if (!this.run) {
+        return;
+    }
+    this.paused = !this.paused;
+    //$('#board, #next').toggleClass('paused', this.paused);
 };
 
 //游戏核心计时函数，根据速度使方块进行下落，触底之后进行判断，将活动方块变为静止方块，并进行消行判定，之后使新的方块进入活动状态
 Game.prototype.tick = function () {
 	if(!this.run) return;
-	setTimeout(this.tick, 1000);
+	setTimeout(this.tick, this.getSpeed());
+	if (this.paused) return;
 	 if (!this.active_block.move('down')) {
             this.makeStaticBlock();
             this.board.checkFullLines();
@@ -359,9 +379,23 @@ Game.prototype.tick = function () {
         }
 	//this.block.move('down');
 };
+//计算等级（每消掉10行增加一级，初始为1级）
+Game.prototype.getLevel = function() {
+	return Math.floor(this.l_cleared/10) + 1;
+}
+//计算下落速度，初始为1000ms下落一次
+Game.prototype.getSpeed = function() {
+	var speed = 1100 - this.getLevel() * 100;
+	return speed > 0 ? speed : 50;
+};
 
 Game.prototype.input = function(input) {
-	this.active_block.move(input);
+	if(input == 'drop'){
+		this.active_block.drop();
+	}else{
+		this.active_block.move(input);
+	}
+
 
 };
 
@@ -396,14 +430,35 @@ Game.prototype.makeStaticBlock = function() {
 Game.prototype.cal_score = function(n) {
 	this.l_cleared += n ;
 	this.score += 100 * n * n;
+	console.log(n);
+	if(this.score > this.highScore){
+		this.highScore = this.score;
+		$("#hi_score_value").text(this.score);
+	}
+	$("#score_value").text(this.score);
+	$("#l_cleared").text(this.score);
+	$("#level").text(this.getLevel());
+	$("#speed").text(this.getSpeed());
 };
 
 Game.prototype.gameover = function() {
 	this.run = false;
+	$('#nextboard').removeClass('grid');
+	this.next_board.cells[1][1].text('您');
+	this.next_board.cells[1][2].text('挂');
+	this.next_board.cells[1][3].text('了');
+
+	this.next_board.cells[2][0].text('请');
+	this.next_board.cells[2][1].text('重');
+	this.next_board.cells[2][2].text('新');
+	this.next_board.cells[2][3].text('来');
+	this.next_board.cells[2][4].text('过');
 	//alert('gameover');
 	//this.start();
 };
 
+$(function(){
+ 	new Game();
+});
 
- new Game();
 
