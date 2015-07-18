@@ -1,18 +1,15 @@
 body {
-   background-image: url(./bg.jpg);
-   background-repeat: no-repeat;
-    background-size: cover;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-
-    -o-background-size: cover;
+   margin: 0;
+   padding: 0;
 }
 div {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   padding: 0;
   margin: 0;
-  font-family: "open sans",sans-serif;
+  font-size: 20px;
+  font-family: '华文新魏',"open sans",sans-serif;
+  color: yellow;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -21,9 +18,15 @@ div {
   user-select: none;
 }
 #main {
+  background-image: url(./img/bg0.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.5);
-  width: 1040px;
+  background-color: rgba(0, 0, 0, 0.75);
+  width: 1200px;
   padding: 30px;
   border: 3px solid black;
   box-shadow: 3px 3px 2px black;
@@ -34,11 +37,11 @@ div {
   position: absolute;
   height: 150px;
   width: 160px;
-  left: 380px;
+  left: 410px;
   top: 240px;
   border: 5px solid #333333;
   border-radius: 10px;
-  background-color: rgba(51, 51, 51, 0.5);
+  background-color: rgba(88, 88, 88, 0.75);
   text-shadow: 1px 1px #888888;
   box-shadow: 3px 3px 3px black;
 }
@@ -47,11 +50,11 @@ div {
   position: absolute;
   height: 150px;
   width: 160px;
-  left: 380px;
+  left: 410px;
   top: 400px;
   border: 5px solid #333333;
   border-radius: 10px;
-  background-color: rgba(51, 51, 51, 0.5);
+  background-color: rgba(88, 88, 88, 0.75);
   text-shadow: 1px 1px #888888;
   box-shadow: 3px 3px 3px black;
 }
@@ -60,11 +63,11 @@ div {
   position: absolute;
   height: 120px;
   width: 160px;
-  left: 380px;
+  left: 410px;
   top: 560px;
   border: 5px solid #333333;
   border-radius: 10px;
-  background-color: rgba(51, 51, 51, 0.5);
+  background-color: rgba(88, 88, 88, 0.75);
   text-shadow: 1px 1px #888888;
   box-shadow: 3px 3px 3px black;
 }
@@ -79,7 +82,7 @@ div {
   margin: 10px;
   margin-bottom: 10px;
   border: 5px solid #333333;
-  background-color: grey;
+  background-color: rgba(255,255,255,0.85);
   border-radius: 5px;
 }
 
@@ -95,15 +98,20 @@ div {
 
 #main #board, #main #nextboard {
   position: relative;
-  background-color: rgba(51, 51, 51, 0.5);
+  background-color: rgba(51, 51, 51, 0.75);
   text-shadow: 1px 1px #888888;
   box-shadow: 3px 3px 3px black;
+}
+#main #nextboard:not(.grid) {
+  cursor: pointer;
 }
 
 #main .grid .cell:not(.block) {
   border: 1px solid rgba(0, 0, 0, 0.2);
   
 }
+
+
 
 #main .row {
   position: relative;
@@ -117,7 +125,7 @@ div {
   height: 30px;
 }
 
-#main:not(.paused) .block {
+#main .block {
   border-bottom: 6px solid rgba(0, 0, 0, 0.7);
   border-right: 6px solid rgba(0, 0, 0, 0.4);
   border-left: 6px solid rgba(255, 255, 255, 0.3);
@@ -127,24 +135,54 @@ div {
 }
 
 
-#main :not(.paused) .i-block {
+#main.round .block {
+  padding-top: 4px;
+  border-radius: 50%;
+  box-shadow: 2px 2px 2px black, inset 4px 4px 6px 2px rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+
+#main .blockI {
   background-color: teal;
 }
-#main :not(.paused) .o-block {
+#main .blockO {
   background-color: yellow;
 }
-#main :not(.paused) .t-block {
+#main .blockT {
   background-color: purple;
 }
-#main :not(.paused) .s-block {
+#main .blockS {
   background-color: green;
 }
-#main :not(.paused) .z-block {
+#main .blockZ {
   background-color: red;
 }
-#main :not(.paused) .j-block {
+#main .blockJ {
   background-color: blue;
 }
-#main :not(.paused) .l-block {
+#main .blockL {
   background-color: orange;
+}
+
+@-webkit-keyframes greenPulse {
+      from { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+      50% { background-color: #91bd09; -webkit-box-shadow: 0 0 18px #91bd09; }
+      to { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
+    }
+
+button.button {
+  padding: 5px;
+  margin: 0 auto;
+  border-radius: 10%;
+  cursor: pointer;
+  font-size: 20px;
+  font-family: '华文新魏',"open sans",sans-serif;
+  color: blue;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite; 
+}
+
+.green.button { 
+  -webkit-animation-name: greenPulse; -webkit-animation-duration: 3s; 
 }

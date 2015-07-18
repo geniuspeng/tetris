@@ -124,25 +124,25 @@ var Block = function(board, location) {
 	//定义7种方块
 	this.blocks = [
 	{
-	  class: 'i-block',
-      shape: [ [ -1, -1 ], [ -1, 0 ], [ -1, 1 ], [ -1, 2 ] ]
+	  class: 'blockI',
+      shape: [ [ 0, -1 ], [ 0, 0 ], [ 0, 1 ], [ 0, 2 ] ]
 	},{
-	  class: 'o-block',
+	  class: 'blockO',
       shape: [ [ -1, -1 ], [ -1, 0 ], [ 0, -1 ], [ 0, 0 ] ]
 	},{
-	  class: 't-block',
+	  class: 'blockT',
       shape: [ [ -1, -1 ], [ -1, 0 ], [ -1, 1 ], [ 0, 0 ] ]
 	},{
-	  class: 'z-block',
+	  class: 'blockZ',
       shape: [ [ -1, -1 ], [ -1, 0 ], [ 0, 0 ], [ 0, 1 ] ]
 	},{
-	  class: 'j-block',
+	  class: 'blockJ',
       shape: [ [ -1, -1 ], [ -1, 0 ], [ -1, 1 ], [ 0, 1 ] ]
 	},{
-	  class: 'l-block',
+	  class: 'blockL',
       shape: [ [ -1, -1 ], [ -1, 0 ], [ -1, 1 ], [ 0, -1 ] ]
 	},{
-	  class: 's-block',
+	  class: 'blockS',
       shape: [ [ -1, 0 ], [ -1, 1 ], [ 0, -1 ], [ 0, 0 ] ]
 	}
 	];
@@ -195,6 +195,7 @@ Block.prototype.crashLine = function(i) {
 	};
 };
 
+//检查方块在location位置是否正常
 Block.prototype.check = function(location) {
 	var temp = this.chunks;
 	var checky,checkx;
@@ -216,6 +217,7 @@ Block.prototype.check = function(location) {
 	return true;
 };
 
+//方块旋转
 Block.prototype.rotate = function() {
 	var temp = this.chunks;
 	var t;
@@ -226,6 +228,7 @@ Block.prototype.rotate = function() {
 	};
 };
 
+//方块旋转还原
 Block.prototype.unrotate = function() {
 	var temp = this.chunks;
 	var t;
@@ -246,10 +249,7 @@ Block.prototype.shiftDown = function(i) {
 	};
 };
 
-Block.prototype.drop = function() {
-	while(this.move('down'));
-};
-
+//游戏方块移动控制
 Block.prototype.move = function(direction) {
 	var  newlocation, xmod=0, ymod=0;
 
@@ -273,7 +273,10 @@ Block.prototype.move = function(direction) {
 			}
 		case 'rotate': 
 			{
-				this.rotate();
+				if(this['class'] != 'blockO'){
+					this.rotate();
+				}
+
 				break;
 			}
 	}
@@ -298,6 +301,11 @@ Block.prototype.move = function(direction) {
 	return check;
 };
 
+//方块瞬间下落触底
+Block.prototype.drop = function() {
+	while(this.move('down'));
+};
+
 
 var Input = function(game) {
 	this.handleKey = bind(this.handleKey, this);
@@ -318,8 +326,6 @@ Input.prototype.codes = {
     39: 'right',
     40: 'down',
     13: 'pause',
-    71: 'grid',
-    76: 'look'
 };
 
 // var board = new Board("game",21,10);
@@ -330,15 +336,27 @@ var Game = function(){
 	this.tick = bind(this.tick, this);
 	this.start = bind(this.start, this);
 	this.pause = bind(this.pause, this);
-	this.board = new Board(this,21,10);
+	this.changeBlockStyle = bind(this.changeBlockStyle, this);
+	this.changeBackGround = bind(this.changeBackGround, this);
+	this.board = new Board(this,21,11);
 	this.next_board = new Board(this,5,5);
+	this.backgroundNum = 1; //控制背景图片的选择
 	this.highScore = 0;//记录最高分数
 	//this.block = new Block(this.board,{x:2,y:2});
 	new Input(this);
 
-	 $('#start').on('click', this.start);
+	// $('#start').on('click', this.start);
 	 $('#pause').on('click', this.pause);
+	 $('#style').on('click', this.changeBlockStyle);
+	 $('#background').on('click', this.changeBackGround);
 	//this.start();
+
+	this.next_board.cells[2][0].text('请');
+	this.next_board.cells[2][1].text('点');
+	this.next_board.cells[2][2].text('击');
+	this.next_board.cells[2][3].text('开');
+	this.next_board.cells[2][4].text('始');
+	 $('#nextboard').on('click', this.start);
 };
 
 Game.prototype.start = function () {
@@ -351,8 +369,8 @@ Game.prototype.start = function () {
 	$('#nextboard').addClass('grid'); //加上nextboard的网格效果
 	$('#nextboard .cell').text(''); //清除nextboard上的文字
 	this.cal_score(0); //还原分数和级别 速度等的显示数据
-	this.genernateBlock();
-	this.makeActive();
+	this.genernateBlock(); //生成一个方块
+	this.makeActive();  //使生成的方块进入游戏面板
 	this.board.static_blocks = [];//定义已经下落触底后静止后的方块集合
 	this.run = true; //控制游戏的进行与结束
 	this.paused = false; //控制游戏的暂停与继续
@@ -363,7 +381,19 @@ Game.prototype.pause = function () {
     if (!this.run) {
         return;
     }
+    if(!this.paused){
+		$('#nextboard').removeClass('grid');
+		this.next_board.cells[4][0].text('游');
+		this.next_board.cells[4][1].text('戏');
+		this.next_board.cells[4][2].text('已');
+		this.next_board.cells[4][3].text('暂');
+		this.next_board.cells[4][4].text('停');
+    }else{
+    	$('#nextboard').addClass('grid');	
+    	$('#nextboard .cell').text('');	
+    }
     this.paused = !this.paused;
+    
     //$('#board, #next').toggleClass('paused', this.paused);
 };
 
@@ -388,15 +418,17 @@ Game.prototype.getSpeed = function() {
 	var speed = 1100 - this.getLevel() * 100;
 	return speed > 0 ? speed : 50;
 };
-
+//输入控制函数
 Game.prototype.input = function(input) {
 	if(input == 'drop'){
 		this.active_block.drop();
-	}else{
+	}
+	else if(input == 'pause') {
+		this.pause();
+	}
+	else{
 		this.active_block.move(input);
 	}
-
-
 };
 
 //生成一个方块图形
@@ -408,9 +440,9 @@ Game.prototype.genernateBlock =  function() {
 Game.prototype.makeActive = function() {
 	this.block.erase();
 	this.active_block = this.block;
-	this.active_block.location = {
+	this.active_block.location = { //方块的初始位置
 		y:1,
-		x:6
+		x:5
 	};
 	this.active_block.board = this.board;
 	if (this.active_block.check(this.active_block.location)) {//如果刚生成的一个方块刚进入活动状态就check失败，说明方块已经堆叠到最上方，此时游戏结束
@@ -426,12 +458,11 @@ Game.prototype.makeStaticBlock = function() {
 	this.board.static_blocks.push(this.active_block);
 };
 
-//计算分数和消除的总行数
+//计算分数和消除的总行数，如果一次消掉n行则获得n*n*100分
 Game.prototype.cal_score = function(n) {
 	this.l_cleared += n ;
 	this.score += 100 * n * n;
-	console.log(n);
-	if(this.score > this.highScore){
+	if(this.score > this.highScore){ //记录最高分
 		this.highScore = this.score;
 		$("#hi_score_value").text(this.score);
 	}
@@ -440,7 +471,7 @@ Game.prototype.cal_score = function(n) {
 	$("#level").text(this.getLevel());
 	$("#speed").text(this.getSpeed());
 };
-
+//游戏结束
 Game.prototype.gameover = function() {
 	this.run = false;
 	$('#nextboard').removeClass('grid');
@@ -455,6 +486,21 @@ Game.prototype.gameover = function() {
 	this.next_board.cells[2][4].text('过');
 	//alert('gameover');
 	//this.start();
+};
+
+//切换方块外观
+Game.prototype.changeBlockStyle = function() {
+    $('#main').toggleClass('round');
+};
+
+//切换背景图片
+Game.prototype.changeBackGround = function() {
+ var imgArray  = [0,1,2,3,4,5];
+ var n = this.backgroundNum++;
+  $(".main").fadeOut(500,function(){
+  	 $(".main").css("background-image","url(./img/bg"+imgArray[n % 6]+".jpg)");
+ 	 $(".main").fadeIn();
+	});
 };
 
 $(function(){

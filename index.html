@@ -8,8 +8,8 @@
 	
 </head>
 <body>
-
  <div class='main' id='main'> 
+
     <div class='column gamebox grid' id='board'></div>
     <div class='column gamebox ' id='nextboard'></div>
     <div class='score'>
@@ -21,17 +21,19 @@
         <div class='column' id='line_cleared'>0</div><br/>
         <div class='column' id='level_label'>级别:</div>
         <div class='column' id='level'>0</div><br/>
-        <div class='column' id='speed_label'>下落间隔（ms）:</div>
+        <div class='column' id='speed_label'>下落间隔/ms:</div>
         <div class='column' id='speed'>0</div><br/>
     </div>   
 
     <div class='rule'>方向键：←，→  <br/>加速下落：↓  <br/>瞬间下落：↑ <br/>旋转：space</div>   
     <div class='control'>
-        <button id='start'>开始</button>
-        <button id='pause'>暂停/继续</button>
- <!--        <button id='restart'>重新开始</button> -->
+        <button class="green button" id='pause'>暂停/继续</button>
+        <button class="green button" id='style'>切换方块外观</button>
+        <button class="green button" id='background'>切换背景</button>
     </div>
+    <audio id='audio' src='http://7xj4f4.com1.z0.glb.clouddn.com/musicきゃりーぱみゅぱみゅ%20-%20PONPONPON.mp3' autoplay='autoplay' controls='controls' loop='loop'>您的浏览器不支持audio标签，无法播放音乐</audio>
 
+</div>
 <script type="text/javascript" src="tetris.js"></script>
 </body>
 </html>
