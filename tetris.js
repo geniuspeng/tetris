@@ -467,7 +467,7 @@ Game.prototype.cal_score = function(n) {
 		$("#hi_score_value").text(this.score);
 	}
 	$("#score_value").text(this.score);
-	$("#l_cleared").text(this.score);
+	$("#line_cleared").text(this.l_cleared);
 	$("#level").text(this.getLevel());
 	$("#speed").text(this.getSpeed());
 };
